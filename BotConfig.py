@@ -1,0 +1,11 @@
+import discord
+
+# variables
+GUILD_ID = discord.Object(id=1455992660790874328)
+
+BOT_TOKEN = 'MTQ1ODk0MzU2ODE1MTQ0OTY3Mw.G9CTPb.LEGUTXjN6jRvYziP-b6VZr0Ys40Yszr2e8wzU8'
+
+INTENTS = discord.Intents.default()
+INTENTS.message_content = True
+
+APPLICATION_ID = 1458943568151449673
