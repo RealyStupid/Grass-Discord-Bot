@@ -112,9 +112,7 @@ class Leveling(commands.Cog):
             )
             await db.commit()
 
-        await interaction.response.send_message(
-            f"{target_user.mention}'s experience multiplier has been set to {multiplier}."
-        )
+        await interaction.response.send_message(f"{target_user.mention}'s experience multiplier has been set to {multiplier}.")
 
     @Level.command(name="leaderboard", description="Shows a leaderboard with the top 10 most highest levels")
     async def leaderboard(self, Interaction: discord.Interaction):
@@ -157,7 +155,7 @@ class Leveling(commands.Cog):
 
         embed.set_footer(text=f"Your Rank: {user_rank}")
 
-        await Interaction.response.send_message(embed=embed)
+        await Interaction.response.send_message(embed=embed, ephemeral=True)
 
     # wipe all data related to the levels
     @Level.command(name=("wipe"), description="Wipes all EXP data from everyone")
@@ -166,7 +164,7 @@ class Leveling(commands.Cog):
             await db.execute("DELETE FROM levels")
             await db.commit()
         
-        await interaction.response.send_message("All EXP data has been wiped.")
+        await interaction.response.send_message("All EXP data has been wiped.", ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(Leveling(bot))
