@@ -3,7 +3,7 @@ import discord
 # variables
 GUILD_ID = discord.Object(id=1455992660790874328)
 
-BOT_TOKEN = 'MTQ1ODk0MzU2ODE1MTQ0OTY3Mw.G9CTPb.LEGUTXjN6jRvYziP-b6VZr0Ys40Yszr2e8wzU8'
+BOT_TOKEN = 'MTQ1ODk0MzU2ODE1MTQ0OTY3Mw.GHT4i4.4-X7l39NQCbY0IbqWH59CMPLDS5VINhmktgBRk'
 
 INTENTS = discord.Intents.default()
 INTENTS.message_content = True

@@ -1,2 +1,30 @@
-[2026-01-11 16:53:18] [INFO    ] discord.client: logging in using static token
-[2026-01-11 16:53:20] [INFO    ] discord.gateway: Shard ID None has connected to Gateway (Session ID: 47f3855a6fba1e6f542e860a67736754).
+[2026-01-11 20:12:26] [INFO    ] discord.client: logging in using static token
+[2026-01-11 20:12:27] [INFO    ] discord.gateway: Shard ID None has connected to Gateway (Session ID: f53c7e0df45f045713b51ebd0328dd7f).
+[2026-01-11 20:12:59] [ERROR   ] discord.app_commands.tree: Ignoring exception in command 'wipe'
+Traceback (most recent call last):
+  File "C:\Users\umary\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\projects\bot\cogs\Leveling.py", line 166, in wipeData
+    await db.execute("DELETE FROM levels")
+  File "C:\Users\umary\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\aiosqlite\core.py", line 223, in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\umary\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\aiosqlite\core.py", line 160, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\umary\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\aiosqlite\core.py", line 63, in _connection_worker_thread
+    result = function()
+sqlite3.OperationalError: no such table: levels
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\umary\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\discord\app_commands\tree.py", line 1297, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "C:\Users\umary\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\discord\app_commands\commands.py", line 884, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\umary\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\discord\app_commands\commands.py", line 877, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'wipe' raised an exception: OperationalError: no such table: levels

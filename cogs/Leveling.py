@@ -162,9 +162,11 @@ class Leveling(commands.Cog):
     # wipe all data related to the levels
     @Level.command(name=("wipe"), description="Wipes all EXP data from everyone")
     async def wipeData(self, interaction= discord.Interaction):
-        async with aiosqlite.connect("data.db") as db:
+        async with aiosqlite.connect("Data/levels.db") as db:
             await db.execute("DELETE FROM levels")
             await db.commit()
+        
+        await interaction.response.send_message("All EXP data has been wiped.")
 
 async def setup(bot):
     await bot.add_cog(Leveling(bot))
