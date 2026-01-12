@@ -1,3 +1,10 @@
+"""
+to commit changes:
+git add .
+git commit -m "discription"
+git push
+"""
+
 # import libraries
 import discord
 import logging
