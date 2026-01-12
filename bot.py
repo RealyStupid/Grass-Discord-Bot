@@ -63,7 +63,7 @@ async def sync_commands(ctx, scope: str = None):
             await ctx.send(f"Synced {len(synced)} commands to **{ctx.guild.name}**")
 
     except Exception as e:
-        await ctx.send(f"Error while syncing: `{e}`")
+        await ctx.send(f"Error while syncing commands: `{e}`")
 
 # Run the bot with token
 bot.run(BotConfig.BOT_TOKEN, log_handler=handler)
