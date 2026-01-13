@@ -25,6 +25,7 @@
     <Compile Include="cogs\Leveling.py" />
     <Compile Include="cogs\modCommands.py" />
     <Compile Include="BotConfig.py" />
+    <Compile Include="cogs\RolesSettings.py" />
     <Compile Include="databaseManager.py" />
   </ItemGroup>
   <ItemGroup>

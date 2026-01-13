@@ -60,10 +60,7 @@ class RoleSetter(commands.Cog):
             )
             await db.commit()
 
-    # ============================================================
-    # INTERACTIVE WIZARD — MODERATOR ROLES
-    # ============================================================
-
+    # SET MODERATOR ROLES
     @set_role.command(name="moderator", description="Interactively set moderator roles")
     async def set_moderator_role(self, interaction: discord.Interaction):
         await self.ensure_table()
@@ -172,10 +169,7 @@ class RoleSetter(commands.Cog):
 
         await interaction.followup.send("Moderator roles saved.")
 
-    # ============================================================
-    # INTERACTIVE WIZARD — ADMIN ROLES
-    # ============================================================
-
+    # SET ADMIN ROLES
     @set_role.command(name="admin", description="Interactively set admin roles")
     async def set_admin_role(self, interaction: discord.Interaction):
         await self.ensure_table()
@@ -284,10 +278,7 @@ class RoleSetter(commands.Cog):
 
         await interaction.followup.send("Admin roles saved.")
 
-    # ============================================================
     # SET MUTED ROLE (simple one-shot command)
-    # ============================================================
-
     @set_role.command(name="muted", description="Set the muted role for the server")
     async def set_muted_role(self, interaction: discord.Interaction, role: discord.Role):
         await self.ensure_table()
@@ -309,10 +300,7 @@ class RoleSetter(commands.Cog):
             ephemeral=True
         )
 
-    # ============================================================
     # REMOVE MODERATOR ROLE
-    # ============================================================
-
     @set_role.command(name="remove_moderator", description="Remove a moderator role from the server")
     async def remove_moderator_role(self, interaction: discord.Interaction):
         await self.ensure_table()
@@ -385,10 +373,7 @@ class RoleSetter(commands.Cog):
 
         await interaction.followup.send(f"Removed {role.mention} from moderator roles.", ephemeral=True)
 
-    # ============================================================
     # REMOVE ADMIN ROLE
-    # ============================================================
-
     @set_role.command(name="remove_admin", description="Remove an admin role from the server")
     async def remove_admin_role(self, interaction: discord.Interaction):
         await self.ensure_table()
@@ -461,10 +446,7 @@ class RoleSetter(commands.Cog):
 
         await interaction.followup.send(f"Removed {role.mention} from admin roles.", ephemeral=True)
 
-    # ============================================================
     # REMOVE MUTED ROLE
-    # ============================================================
-
     @set_role.command(name="remove_muted", description="Remove the muted role from the server")
     async def remove_muted_role(self, interaction: discord.Interaction):
         await self.ensure_table()
@@ -527,10 +509,7 @@ class RoleSetter(commands.Cog):
 
         await interaction.followup.send("Muted role removed.", ephemeral=True)
 
-    # ============================================================
     # WIPE ALL ROLES
-    # ============================================================
-
     @set_role.command(name="wipe_roles", description="Wipe all role settings for the server")
     async def wipe_roles(self, interaction: discord.Interaction):
         await self.ensure_table()
@@ -574,10 +553,7 @@ class RoleSetter(commands.Cog):
 
         await interaction.followup.send("All role settings have been wiped.", ephemeral=True)
 
-    # ============================================================
     # DISPLAY ROLES
-    # ============================================================
-
     @set_role.command(name="display_roles", description="Display all role settings for the server")
     async def display_roles(self, interaction: discord.Interaction):
         await self.ensure_table()
