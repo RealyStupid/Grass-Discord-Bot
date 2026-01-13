@@ -42,7 +42,7 @@ class RoleSetter(commands.Cog):
         self.bot = bot
 
     set_role = app_commands.Group(
-        name="set_role",
+        name="set-role",
         description="Configure moderation roles",
         guild_ids=[GUILD_ID.id]
     )
