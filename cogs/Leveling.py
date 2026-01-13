@@ -1,7 +1,6 @@
-from enum import member
-from turtle import position
 import discord
-import aiosqlite # type: ignore
+import sqlite3
+import aiosqlite
 from discord.ext import commands
 from discord import app_commands
 
