@@ -5,7 +5,7 @@ from BotConfig import GUILD_ID
 import asyncio
 import aiosqlite
 import json
-
+from BotConfig import GUILD_ID
 
 # ============================================================
 # CONFIRM / CANCEL BUTTON VIEW
@@ -578,7 +578,7 @@ class RoleSetter(commands.Cog):
     # DISPLAY ROLES
     # ============================================================
 
-    @app_commands.command(name="display_roles", description="Display all role settings for the server", guilds=[GUILD_ID])
+    @set_role.command(name="display_roles", description="Display all role settings for the server")
     async def display_roles(self, interaction: discord.Interaction):
         await self.ensure_table()
         guild_id = interaction.guild.id
@@ -592,8 +592,7 @@ class RoleSetter(commands.Cog):
 
         if not row:
             await interaction.response.send_message(
-                "No role settings are configured for this server.",
-                ephemeral=True
+                "No role settings are configured for this server."
             )
             return
 
@@ -624,7 +623,7 @@ class RoleSetter(commands.Cog):
             inline=False
         )
 
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(RoleSetter(bot))
