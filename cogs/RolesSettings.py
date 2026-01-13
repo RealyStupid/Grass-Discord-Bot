@@ -578,7 +578,7 @@ class RoleSetter(commands.Cog):
     # DISPLAY ROLES
     # ============================================================
 
-    @app_commands.command(name="display_roles", description="Display all role settings for the server")
+    @app_commands.command(name="display_roles", description="Display all role settings for the server", guilds=[GUILD_ID])
     async def display_roles(self, interaction: discord.Interaction):
         await self.ensure_table()
         guild_id = interaction.guild.id
