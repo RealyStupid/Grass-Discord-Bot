@@ -40,7 +40,7 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 
 # sync commands using prefix command
 @bot.command(name="sync")
-@BotConfig.admin_only()
+@BotConfig.bot_owner_only()
 async def sync_commands(ctx, scope: str = None):
     """
     Sync slash commands using a prefix command.

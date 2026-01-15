@@ -5,7 +5,7 @@ from discord import interactions
 from discord.ext import commands
 from discord import app_commands
 
-from BotConfig import GUILD_ID, admin_only, staff_only # type: ignore
+from BotConfig import GUILD_ID, admin_only, staff_only 
 
 class Leveling(commands.Cog):
     def __init__(self, bot):

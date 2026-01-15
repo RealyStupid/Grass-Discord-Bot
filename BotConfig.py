@@ -4,6 +4,7 @@ import aiosqlite
 import json
 from discord import app_commands
 from discord.ext import commands
+from functools import wraps
 
 # bot constants
 GUILD_ID = discord.Object(id=1460487931461636240)
@@ -73,6 +74,8 @@ async def user_has_staff(interaction: discord.Interaction) -> bool:
         or interaction.user.id == interaction.client.owner_id
     )
 
+async def is_bot_owner(interaction: discord.Interaction) -> bool:
+    return interaction.user.id == interaction.guild.owner_id
 
 # ============================================================
 # DECORATORS
@@ -80,6 +83,7 @@ async def user_has_staff(interaction: discord.Interaction) -> bool:
 
 def mod_only():
     def decorator(func):
+        @wraps(func)
         async def wrapper(self, interaction: discord.Interaction, *args, **kwargs):
             if not await user_has_mod(interaction):
                 await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
@@ -91,6 +95,7 @@ def mod_only():
 
 def admin_only():
     def decorator(func):
+        @wraps(func)
         async def wrapper(self, interaction: discord.Interaction, *args, **kwargs):
             if not await user_has_admin(interaction):
                 await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
@@ -101,10 +106,22 @@ def admin_only():
 
 def staff_only():
     def decorator(func):
+        @wraps(func)
         async def wrapper(self, interaction: discord.Interaction, *args, **kwargs):
             if not await user_has_staff(interaction):
                 await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
                 return
             return await func(self, interaction, *args, **kwargs)
+        return wrapper
+    return decorator
+
+def bot_owner_only():
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(ctx, *args, **kwargs):
+            if ctx.author.id != ctx.guild.owner_id:
+                await ctx.send("You do not have permission to use this command.")
+                return
+            return await func(ctx, *args, **kwargs)
         return wrapper
     return decorator
