@@ -1,4 +1,3 @@
-from ast import mod
 import discord
 from discord.ext import commands
 from discord import app_commands
@@ -6,7 +5,7 @@ from discord import app_commands
 import aiosqlite
 import sqlite3
 
-from BotConfig import GUILD_ID
+from BotConfig import GUILD_ID, mod_only, admin_only, staff_only
 
 class Moderation(commands.Cog):
     def __init__(self, bot):
@@ -20,6 +19,7 @@ class Moderation(commands.Cog):
 
     # say command
     @mods.command(name="say", description="Send a message to a channel")
+    @staff_only()
     async def say(self, interaction: discord.Interaction, message: str, channel: discord.TextChannel | None = None):
         target = channel or interaction.channel
         await target.send(message)
@@ -28,6 +28,7 @@ class Moderation(commands.Cog):
 
     # ping command
     @mods.command(name="ping", description="Check if the bot is alive by mentioning you")
+    @staff_only()
     async def ping(self, interaction: discord.Interaction):
         await interaction.response.send_message(f"{interaction.user.mention}", ephemeral=True)
         print(f"Pinged user: {interaction.user.name}")
@@ -35,6 +36,7 @@ class Moderation(commands.Cog):
     # roles commands
     #role creation command
     @mods.command(name="createrole", description="Create a new role in the server")
+    @staff_only()
     async def createrole(self, interaction: discord.Interaction, role_name: str, color: str = "default"):
         guild = interaction.guild
         try:
@@ -50,17 +52,8 @@ class Moderation(commands.Cog):
 
     # role deletion command
     @mods.command(name="delete_role", description="Delete a role from the server")
+    @staff_only()
     async def delete_role(self, interaction: discord.Interaction, role: discord.Role):
-        try:
-            await role.delete()
-            await interaction.response.send_message(f"Role '{role.name}' deleted successfully!")
-            print(f"Deleted role: {role.name}")
-        except Exception as e:
-            await interaction.response.send_message(f"Failed to delete role: {e}", ephemeral=True)
-
-    #delete role command
-    @mods.command(name="deleterole", description="Delete a role from the server")
-    async def deleterole(self, interaction: discord.Interaction, role: discord.Role):
         try:
             await role.delete()
             await interaction.response.send_message(f"Role '{role.name}' deleted successfully!")
@@ -70,6 +63,7 @@ class Moderation(commands.Cog):
 
     # info command
     @info.command(name="userinfo", description="Get information about a user")
+    @staff_only()
     async def userinfo(self, interaction: discord.Interaction, user: discord.Member):
         embed = discord.Embed(title="User Information", color=discord.Color.blue())
         embed.set_thumbnail(url=user.avatar.url if user.avatar else user.default_avatar.url)

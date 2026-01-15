@@ -1,11 +1,10 @@
 ﻿import discord
 from discord import app_commands
 from discord.ext import commands
-from BotConfig import GUILD_ID
+from BotConfig import GUILD_ID, admin_only, staff_only
 import asyncio
 import aiosqlite
 import json
-from BotConfig import GUILD_ID
 
 # ============================================================
 # CONFIRM / CANCEL BUTTON VIEW
@@ -24,7 +23,7 @@ class RoleConfirmView(discord.ui.View):
     async def confirm(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.value = True
         self.stop()
-        await interaction.response.send_message("Confirmed. Saving...", ephemeral=True)
+        #await interaction.response.send_message("Confirmed. Saving...", ephemeral=True)
 
     @discord.ui.button(label="Cancel", style=discord.ButtonStyle.red)
     async def cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -62,6 +61,7 @@ class RoleSetter(commands.Cog):
 
     # SET MODERATOR ROLES
     @set_role.command(name="moderator", description="Interactively set moderator roles")
+    @admin_only()
     async def set_moderator_role(self, interaction: discord.Interaction):
         await self.ensure_table()
         guild_id = interaction.guild.id
@@ -171,6 +171,7 @@ class RoleSetter(commands.Cog):
 
     # SET ADMIN ROLES
     @set_role.command(name="admin", description="Interactively set admin roles")
+    @admin_only()
     async def set_admin_role(self, interaction: discord.Interaction):
         await self.ensure_table()
         guild_id = interaction.guild.id
@@ -280,6 +281,7 @@ class RoleSetter(commands.Cog):
 
     # SET MUTED ROLE (simple one-shot command)
     @set_role.command(name="muted", description="Set the muted role for the server")
+    @admin_only()
     async def set_muted_role(self, interaction: discord.Interaction, role: discord.Role):
         await self.ensure_table()
         guild_id = interaction.guild.id
@@ -302,6 +304,7 @@ class RoleSetter(commands.Cog):
 
     # REMOVE MODERATOR ROLE
     @set_role.command(name="remove_moderator", description="Remove a moderator role from the server")
+    @admin_only()
     async def remove_moderator_role(self, interaction: discord.Interaction):
         await self.ensure_table()
         guild_id = interaction.guild.id
@@ -375,6 +378,7 @@ class RoleSetter(commands.Cog):
 
     # REMOVE ADMIN ROLE
     @set_role.command(name="remove_admin", description="Remove an admin role from the server")
+    @admin_only()
     async def remove_admin_role(self, interaction: discord.Interaction):
         await self.ensure_table()
         guild_id = interaction.guild.id
@@ -448,6 +452,7 @@ class RoleSetter(commands.Cog):
 
     # REMOVE MUTED ROLE
     @set_role.command(name="remove_muted", description="Remove the muted role from the server")
+    @admin_only()
     async def remove_muted_role(self, interaction: discord.Interaction):
         await self.ensure_table()
         guild_id = interaction.guild.id
@@ -511,6 +516,7 @@ class RoleSetter(commands.Cog):
 
     # WIPE ALL ROLES
     @set_role.command(name="wipe_roles", description="Wipe all role settings for the server")
+    @admin_only()
     async def wipe_roles(self, interaction: discord.Interaction):
         await self.ensure_table()
         guild_id = interaction.guild.id
@@ -555,6 +561,7 @@ class RoleSetter(commands.Cog):
 
     # DISPLAY ROLES
     @set_role.command(name="display_roles", description="Display all role settings for the server")
+    @staff_only()
     async def display_roles(self, interaction: discord.Interaction):
         await self.ensure_table()
         guild_id = interaction.guild.id

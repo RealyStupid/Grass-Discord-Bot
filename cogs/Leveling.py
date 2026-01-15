@@ -1,10 +1,11 @@
 import discord
 import sqlite3
 import aiosqlite
+from discord import interactions
 from discord.ext import commands
 from discord import app_commands
 
-from BotConfig import GUILD_ID # type: ignore
+from BotConfig import GUILD_ID, admin_only, staff_only # type: ignore
 
 class Leveling(commands.Cog):
     def __init__(self, bot):
@@ -83,6 +84,7 @@ class Leveling(commands.Cog):
 
     # reset levels
     @Level.command(name="reset_levels", description="Reset the exp data from a user")
+    @staff_only()
     async def resetExp(self, interaction: discord.Interaction, user: discord.Member | None = None):
         target_user = user or interaction.user
 
@@ -97,6 +99,7 @@ class Leveling(commands.Cog):
 
     # set the multiplier
     @Level.command(name="set_multiplier", description="Set your exp multiplier")
+    @staff_only()
     async def setMultiplier(self, interaction: discord.Interaction, multiplier: int, user: discord.Member | None = None):
         target_user = user or interaction.user
 
@@ -112,7 +115,8 @@ class Leveling(commands.Cog):
             await db.commit()
 
         await interaction.response.send_message(f"{target_user.mention}'s experience multiplier has been set to {multiplier}.")
-
+    
+    # leaderboard command
     @Level.command(name="leaderboard", description="Shows a leaderboard with the top 10 most highest levels")
     async def leaderboard(self, Interaction: discord.Interaction):
         
@@ -152,12 +156,13 @@ class Leveling(commands.Cog):
                 color=discord.Color.gold()
             )
 
-        embed.set_footer(text=f"Your Rank: {user_rank}")
+        embed.set_footer(text=f"{Interaction.user}'s Rank: {user_rank}")
 
         await Interaction.response.send_message(embed=embed, ephemeral=True)
 
     # wipe all data related to the levels
     @Level.command(name=("wipe"), description="Wipes all EXP data from everyone")
+    @admin_only()
     async def wipeData(self, interaction= discord.Interaction):
         async with aiosqlite.connect("Data/levels.db") as db:
             await db.execute("DELETE FROM levels")
