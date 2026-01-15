@@ -71,7 +71,7 @@ async def user_has_staff(interaction: discord.Interaction) -> bool:
     return (
         await user_has_admin(interaction)
         or await user_has_mod(interaction)
-        or interaction.user.id == interaction.client.owner_id
+        or interaction.user.id == interaction.guild.owner_id
     )
 
 async def is_bot_owner(interaction: discord.Interaction) -> bool:

@@ -1,4 +1,4 @@
-import discord
+﻿import discord
 from discord.ext import commands
 from discord import app_commands
 
@@ -32,6 +32,63 @@ class Moderation(commands.Cog):
     async def ping(self, interaction: discord.Interaction):
         await interaction.response.send_message(f"{interaction.user.mention}", ephemeral=True)
         print(f"Pinged user: {interaction.user.name}")
+
+    # purge command
+    @mods.command(
+        name="purge",
+        description="Delete messages with optional filters (user, search length)."
+    )
+    @app_commands.describe(
+        user="Only delete messages from this user",
+        search="How many recent messages to search through"
+    )
+    @staff_only()
+    async def purge(
+        self,
+        interaction: discord.Interaction,
+        user: discord.User | None = None,
+        search: int | None = None
+    ):
+        await interaction.response.defer(ephemeral=True)
+
+        # Default search depth if none provided
+        search_depth = search if search is not None else 10
+
+        # Safety check
+        if search_depth < 1:
+            return await interaction.followup.send("Search length must be at least 1.")
+
+        # CASE 1: User filter only
+        if user and not search:
+            deleted = await interaction.channel.purge(
+                limit=None,  # default search depth for user-only purge
+                check=lambda m: m.author.id == user.id
+            )
+            return await interaction.followup.send(
+                f"Deleted {len(deleted)} messages from **{user}**."
+            )
+
+        # CASE 2: Search length only
+        if search and not user:
+            deleted = await interaction.channel.purge(limit=search_depth)
+            return await interaction.followup.send(
+                f"Deleted {len(deleted)} messages."
+            )
+
+        # CASE 3: Both user + search length
+        if user and search:
+            deleted = await interaction.channel.purge(
+                limit=search_depth,
+                check=lambda m: m.author.id == user.id
+            )
+            return await interaction.followup.send(
+                f"Deleted {len(deleted)} messages from **{user}** "
+                f"within the last {search_depth} messages."
+            )
+
+        # CASE 4: Neither provided → default purge 10
+        deleted = await interaction.channel.purge(limit=None)
+        await interaction.followup.send(f"Deleted {len(deleted)} messages.")
 
     # roles commands
     #role creation command

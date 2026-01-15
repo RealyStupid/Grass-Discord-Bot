@@ -1,26 +1,2 @@
-[2026-01-15 10:24:57] [INFO    ] discord.client: logging in using static token
-[2026-01-15 10:24:58] [INFO    ] discord.gateway: Shard ID None has connected to Gateway (Session ID: 8c6e826a49bda1243ab04cd8b1e44abc).
-[2026-01-15 10:25:04] [ERROR   ] discord.ext.commands.bot: Ignoring exception in command sync
-Traceback (most recent call last):
-  File "C:\Users\umary\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\discord\ext\commands\core.py", line 266, in wrapped
-    ret = await coro(*args, **kwargs)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\projects\bot\BotConfig.py", line 121, in wrapper
-    if not await is_bot_owner(interaction):
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\projects\bot\BotConfig.py", line 77, in is_bot_owner
-    return interaction.user.id == interaction.guild.owner_id
-           ^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute 'user'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "C:\Users\umary\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\discord\ext\commands\bot.py", line 1376, in invoke
-    await ctx.command.invoke(ctx)
-  File "C:\Users\umary\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\discord\ext\commands\core.py", line 1064, in invoke
-    await injected(*ctx.args, **ctx.kwargs)  # type: ignore
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\umary\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\discord\ext\commands\core.py", line 275, in wrapped
-    raise CommandInvokeError(exc) from exc
-discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: 'NoneType' object has no attribute 'user'
+[2026-01-15 10:51:39] [INFO    ] discord.client: logging in using static token
+[2026-01-15 10:51:40] [INFO    ] discord.gateway: Shard ID None has connected to Gateway (Session ID: 7d2ce63ae2a2c1b71844f93e132e7cf4).
