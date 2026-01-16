@@ -1,6 +1,6 @@
 import sqlite3
 
-# run this file once to create a new db file
+# run this file once to create a new db files if they don't exist
 conn = sqlite3.connect('Data/Moderation_settings.db')
 
 cursor = conn.cursor()

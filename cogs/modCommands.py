@@ -5,7 +5,7 @@ from discord import app_commands
 import aiosqlite
 import sqlite3
 
-from BotConfig import GUILD_ID, mod_only, admin_only, staff_only
+from BotConfig import GUILD_ID, staff_only
 
 class Moderation(commands.Cog):
     def __init__(self, bot):

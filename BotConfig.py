@@ -16,10 +16,7 @@ INTENTS.message_content = True
 
 APPLICATION_ID = 1458943568151449673
 
-# ============================================================
 # DATABASE HELPERS
-# ============================================================
-
 async def get_role_data(guild_id: int):
     async with aiosqlite.connect("Data/Moderation_settings.db") as db:
         cursor = await db.execute(
@@ -37,10 +34,7 @@ async def get_role_data(guild_id: int):
 
     return mod_roles, admin_roles, muted_role
 
-# ============================================================
 # PERMISSION CHECKS WITH FALLBACK
-# ============================================================
-
 async def user_has_mod(interaction: discord.Interaction) -> bool:
     guild_id = interaction.guild.id
     user_roles = [r.id for r in interaction.user.roles]
@@ -74,13 +68,7 @@ async def user_has_staff(interaction: discord.Interaction) -> bool:
         or interaction.user.id == interaction.guild.owner_id
     )
 
-async def is_bot_owner(interaction: discord.Interaction) -> bool:
-    return interaction.user.id == interaction.guild.owner_id
-
-# ============================================================
 # DECORATORS
-# ============================================================
-
 def mod_only():
     def decorator(func):
         @wraps(func)
