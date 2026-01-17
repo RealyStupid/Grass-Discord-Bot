@@ -23,6 +23,7 @@
   <ItemGroup>
     <Compile Include="bot.py" />
     <Compile Include="cogs\Leveling.py" />
+    <Compile Include="cogs\logging\loggingManager.py" />
     <Compile Include="cogs\modCommands.py" />
     <Compile Include="BotConfig.py" />
     <Compile Include="cogs\RolesSettings.py" />
@@ -30,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="cogs\" />
+    <Folder Include="cogs\logging\" />
     <Folder Include="Data\" />
   </ItemGroup>
   <ItemGroup>

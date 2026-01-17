@@ -22,11 +22,14 @@ class GrassBot(commands.Bot):
         super().__init__(command_prefix='!', intents=BotConfig.INTENTS, application_id=BotConfig.APPLICATION_ID)
 
     async def setup_hook(self):
-        #setup cogs
-        for filename in os.listdir('./cogs'):
-            if filename.endswith('.py'):
-                await self.load_extension(f'cogs.{filename[:-3]}')
-                print(f'Loaded cog: {filename}')
+        for root, dirs, files in os.walk('./cogs'):
+            for file in files:
+                if file.endswith('.py'):
+                    path = os.path.join(root, file)
+                    ext = path.replace('./', '').replace('/', '.').replace('\\', '.').replace('.py', '')
+                    await self.load_extension(ext)
+                    print(f"Loaded cog: {ext}")
+
 
     async def on_ready(self):
         print(f'Logged on as {self.user}')
