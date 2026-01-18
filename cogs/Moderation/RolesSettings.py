@@ -1,7 +1,7 @@
 ﻿import discord
 from discord import app_commands
 from discord.ext import commands
-from BotConfig import GUILD_ID, admin_only, staff_only
+from BotConfig import GUILD_IDS, admin_only, staff_only
 import asyncio
 import aiosqlite
 import json
@@ -43,7 +43,7 @@ class RoleSetter(commands.Cog):
     set_role = app_commands.Group(
         name="set-role",
         description="Configure moderation roles",
-        guild_ids=[GUILD_ID.id]
+        guild_ids=GUILD_IDS
     )
 
     # Ensure DB table exists

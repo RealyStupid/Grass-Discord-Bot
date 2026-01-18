@@ -45,32 +45,20 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 @bot.command(name="sync")
 @BotConfig.bot_owner_only()
 async def sync_commands(ctx, scope: str = None):
-    """
-    Sync slash commands using a prefix command.
-    Usage:
-      !sync            -> sync to this guild only
-      !sync global     -> global sync
-      !sync clear      -> clear & resync guild commands
-    """
     try:
         if scope == "global":
-            print("Starting global sync...")
             synced = await bot.tree.sync()
-            print("Global sync completed.")
             await ctx.send(f"Globally synced {len(synced)} commands")
 
-        elif scope == "clear":
-            print("Clearing guild commands...")
-            bot.tree.clear_commands(guild=ctx.guild)
-            print("starting resync...")
-            await bot.tree.sync(guild=ctx.guild)
-            print("Resync completed.")
-            await ctx.send(f"Cleared and resynced commands for **{ctx.guild.name}**")
+        elif scope == "all":
+            total = 0
+            for gid in BotConfig.GUILD_IDS:
+                synced = await bot.tree.sync(guild=discord.Object(id=gid))
+                total += len(synced)
+            await ctx.send(f"Synced commands to all dev guilds ({len(BotConfig.GUILD_IDS)} guilds).")
 
         else:
-            print("Starting guild sync...")
             synced = await bot.tree.sync(guild=ctx.guild)
-            print("Guild sync completed.")
             await ctx.send(f"Synced {len(synced)} commands to **{ctx.guild.name}**")
 
     except Exception as e:

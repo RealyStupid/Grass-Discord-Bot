@@ -6,7 +6,7 @@ import asyncio
 import aiosqlite
 import json
 
-from BotConfig import GUILD_ID, staff_only
+from BotConfig import GUILD_IDS, staff_only
 
 
 async def get_role_data(guild_id: int):
@@ -65,9 +65,9 @@ class LoggingSettings(commands.Cog):
         self.bot = bot
 
     logChannelSetup = app_commands.Group(
-        name="logchannelsetup",
+        name="loging-setup",
         description="Commands to setup logging channels",
-        guild_ids=[GUILD_ID.id]
+        guild_ids=GUILD_IDS
     )
 
     # ---------------------------------------------------------
@@ -370,14 +370,37 @@ class LoggingSettings(commands.Cog):
     @logChannelSetup.command(name="reset", description="Reset all logging channel settings")
     @staff_only()
     async def reset_logging(self, interaction: discord.Interaction):
+        guild = interaction.guild
+
+        # Fetch all channel IDs from DB
         async with aiosqlite.connect("Data/Moderation_settings.db") as db:
-            await db.execute("DELETE FROM logging_channels WHERE guild_id = ?", (interaction.guild.id,))
+            async with db.execute(
+                "SELECT main_logging_channel, member_logging_channel, server_logging_channel, voice_logging_channel, message_logging_channel, join_leave_logging_channel FROM logging_channels WHERE guild_id = ?",
+                (guild.id,)
+            ) as cursor:
+                row = await cursor.fetchone()
+
+        if row:
+            channel_ids = list(row)
+
+            # Delete channels
+            for cid in channel_ids:
+                if cid:
+                    channel = guild.get_channel(cid)
+                    if channel:
+                        try:
+                            await channel.delete(reason="Logging wipeed")
+                        except:
+                            pass
+
+        # Clear DB row
+        async with aiosqlite.connect("Data/Moderation_settings.db") as db:
+            await db.execute("DELETE FROM logging_channels WHERE guild_id = ?", (guild.id,))
             await db.commit()
 
         await interaction.response.send_message(
-            "Logging settings have been reset."
+            "Logging setup has been fully wiped. All logging channels and database entries have been removed."
         )
-
 
 async def setup(bot):
     await bot.add_cog(LoggingSettings(bot))

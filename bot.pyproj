@@ -22,16 +22,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="bot.py" />
-    <Compile Include="cogs\Leveling.py" />
+    <Compile Include="cogs\others\Leveling.py" />
     <Compile Include="cogs\logging\loggingManager.py" />
-    <Compile Include="cogs\modCommands.py" />
+    <Compile Include="cogs\logging\memberLogging.py" />
+    <Compile Include="cogs\logging\messageLogging.py" />
+    <Compile Include="cogs\logging\serverLogging.py" />
+    <Compile Include="cogs\logging\voiceLogging.py" />
+    <Compile Include="cogs\Moderation\modCommands.py" />
     <Compile Include="BotConfig.py" />
-    <Compile Include="cogs\RolesSettings.py" />
+    <Compile Include="cogs\Moderation\RolesSettings.py" />
+    <Compile Include="cogs\others\partnershipManager.py" />
     <Compile Include="databaseManager.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="cogs\" />
     <Folder Include="cogs\logging\" />
+    <Folder Include="cogs\Moderation\" />
+    <Folder Include="cogs\others\" />
     <Folder Include="Data\" />
   </ItemGroup>
   <ItemGroup>

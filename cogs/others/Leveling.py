@@ -5,7 +5,7 @@ from discord import interactions
 from discord.ext import commands
 from discord import app_commands
 
-from BotConfig import GUILD_ID, admin_only, staff_only 
+from BotConfig import GUILD_IDS, admin_only, staff_only 
 
 class Leveling(commands.Cog):
     def __init__(self, bot):
@@ -54,7 +54,7 @@ class Leveling(commands.Cog):
     Level = app_commands.Group(
         name="level",
         description="Commands related to your levels",
-        guild_ids=[GUILD_ID.id]
+        guild_ids=GUILD_IDS
     )
 
     # show levels command

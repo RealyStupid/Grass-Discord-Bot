@@ -5,17 +5,17 @@ from discord import app_commands
 import aiosqlite
 import sqlite3
 
-from BotConfig import GUILD_ID, staff_only
+from BotConfig import GUILD_IDS, staff_only
 
 class Moderation(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
     #creating a group for moderation commands
-    mods = app_commands.Group(name="moderation", description="Moderation commands", guild_ids=[GUILD_ID.id])
+    mods = app_commands.Group(name="moderation", description="Moderation commands", guild_ids=GUILD_IDS)
 
     # creating a group for grabbing info
-    info = app_commands.Group(name="info", description="this command relates to gaining information about somthing", guild_ids=[GUILD_ID.id])
+    info = app_commands.Group(name="info", description="this command relates to gaining information about somthing", guild_ids=GUILD_IDS)
 
     # say command
     @mods.command(name="say", description="Send a message to a channel")

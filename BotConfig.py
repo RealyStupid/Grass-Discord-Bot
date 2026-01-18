@@ -7,7 +7,7 @@ from discord.ext import commands
 from functools import wraps
 
 # bot constants
-GUILD_ID = discord.Object(id=1460487931461636240)
+GUILD_IDS = [1460487931461636240, 1462259891472437415]
 
 BOT_TOKEN = 'MTQ1ODk0MzU2ODE1MTQ0OTY3Mw.GHT4i4.4-X7l39NQCbY0IbqWH59CMPLDS5VINhmktgBRk'
 

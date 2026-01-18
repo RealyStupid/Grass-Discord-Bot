@@ -48,3 +48,15 @@ cursor.executescript('''
  ''')
 conn.commit()
 conn.close()
+
+conn = sqlite3.connect('Data/Partherships.db')
+cursor = conn.cursor()
+cursor.executescript('''
+    CREATE TABLE IF NOT EXISTS bridges (
+        channel_a INTEGER NOT NULL,
+        channel_b INTEGER NOT NULL,
+        PRIMARY KEY (channel_a, channel_b)
+    );
+''')
+conn.commit()
+conn.close()
