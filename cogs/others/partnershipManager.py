@@ -1,12 +1,12 @@
-﻿import discord
+﻿from BotConfig import GUILD_IDS, bot_owner_only
+import discord
 from discord.ext import commands
 from discord import app_commands
 import sqlite3
 import os
+import io
 
-from BotConfig import GUILD_IDS, GUILD_IDS
-
-DB_PATH = "Data/Partherships.db"
+DB_PATH = 'Data/Partherships.db'
 
 
 class MessageBridge(commands.Cog):
@@ -14,6 +14,9 @@ class MessageBridge(commands.Cog):
         self.bot = bot
         self._ensure_db()
         self.bot.bridges = self._load_bridges()
+
+        # Cache for webhooks so we don't fetch/create every message
+        self.webhook_cache: dict[int, discord.Webhook] = {}
 
     # ----------------------------------------------------
     # DATABASE SETUP
@@ -41,7 +44,26 @@ class MessageBridge(commands.Cog):
         return {frozenset((a, b)) for a, b in rows}
 
     # ----------------------------------------------------
-    # MESSAGE RELAY LISTENER
+    # WEBHOOK HELPER
+    # ----------------------------------------------------
+    async def get_webhook(self, channel: discord.TextChannel) -> discord.Webhook:
+        """Fetch or create a webhook for a channel, with caching."""
+        if channel.id in self.webhook_cache:
+            return self.webhook_cache[channel.id]
+
+        webhooks = await channel.webhooks()
+        for wh in webhooks:
+            if wh.name == "BridgeWebhook":
+                self.webhook_cache[channel.id] = wh
+                return wh
+
+        # Create a new webhook if none exist
+        wh = await channel.create_webhook(name="BridgeWebhook")
+        self.webhook_cache[channel.id] = wh
+        return wh
+
+    # ----------------------------------------------------
+    # MESSAGE RELAY LISTENER (WEBHOOK VERSION)
     # ----------------------------------------------------
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -51,13 +73,42 @@ class MessageBridge(commands.Cog):
         for pair in self.bot.bridges:
             if message.channel.id in pair:
                 other_channel_id = next(ch for ch in pair if ch != message.channel.id)
-
                 other_channel = self.bot.get_channel(other_channel_id)
-                if other_channel is None:
+
+                if not other_channel or not isinstance(other_channel, discord.TextChannel):
                     continue
 
-                content = f"{message.author.display_name}: {message.content}"
-                await other_channel.send(content)
+                webhook = await self.get_webhook(other_channel)
+
+                # Forward attachments
+                files = []
+                for attachment in message.attachments:
+                    data = await attachment.read()
+                    files.append(discord.File(io.BytesIO(data), filename=attachment.filename))
+
+                # Prevent blank webhook messages
+                safe_content = message.content.strip() if message.content else ""
+                if not safe_content and not files:
+                    safe_content = " "  # ensures webhook message is visible
+
+                print("Attempting webhook send to:", other_channel.id)
+                print("DEBUG FILES:", files, type(files))
+
+                try:
+                    await webhook.send(
+                        content=safe_content,
+                        username=message.author.display_name,
+                        avatar_url=message.author.display_avatar.url,
+                        files=files
+                    )
+                    print("Webhook sent successfully.")
+
+                except Exception as e:
+                    print("WEBHOOK SEND ERROR:", repr(e))
+                    # If webhook is bad, drop it from cache so it can be recreated next time
+                    if other_channel.id in self.webhook_cache:
+                        del self.webhook_cache[other_channel.id]
+
                 return
 
     # ----------------------------------------------------
