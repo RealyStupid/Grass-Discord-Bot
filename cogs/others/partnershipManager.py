@@ -63,7 +63,7 @@ class MessageBridge(commands.Cog):
         return wh
 
     # ----------------------------------------------------
-    # MESSAGE RELAY LISTENER (WEBHOOK VERSION)
+    # MESSAGE RELAY LISTENER
     # ----------------------------------------------------
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -86,10 +86,24 @@ class MessageBridge(commands.Cog):
                     data = await attachment.read()
                     files.append(discord.File(io.BytesIO(data), filename=attachment.filename))
 
+                # adding replying with webhook
+                reply_prefix = ""
+
+                if message.reference and message.reference.resolved:
+                    replied = message.reference.resolved
+
+                    # a short preview of message
+                    preview = replied.content.strip() if replied.content else "[attachment]"
+                    if len(preview) > 80:
+                        preview = preview[80] + '...'
+
+                    reply_prefix = f"↪ Replying to {replied.author.display_name}: \"{preview}\"\n"
+
                 # Prevent blank webhook messages
                 safe_content = message.content.strip() if message.content else ""
+                safe_content = reply_prefix + safe_content
                 if not safe_content and not files:
-                    safe_content = " "  # ensures webhook message is visible
+                    safe_content = " "
 
                 print("Attempting webhook send to:", other_channel.id)
                 print("DEBUG FILES:", files, type(files))
@@ -110,6 +124,42 @@ class MessageBridge(commands.Cog):
                         del self.webhook_cache[other_channel.id]
 
                 return
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, before: discord.Message, after: discord.Message):
+        if before.author.bot:
+            return
+
+        # Ignore if content didn't change
+        if before.content == after.content:
+            return
+
+        for pair in self.bot.bridges:
+            if before.channel.id in pair:
+                other_channel_id = next(ch for ch in pair if ch != before.channel.id)
+                other_channel = self.bot.get_channel(other_channel_id)
+
+                if not other_channel or not isinstance(other_channel, discord.TextChannel):
+                    continue
+
+                webhook = await self.get_webhook(other_channel)
+
+                # Build safe content
+                new_content = after.content.strip() if after.content else "[no content]"
+
+                msg = f"✎ {before.author.display_name} edited a message:\n{new_content}"
+
+                try:
+                    await webhook.send(
+                        content=msg,
+                        username=before.author.display_name,
+                        avatar_url=before.author.display_avatar.url
+                    )
+                except Exception as e:
+                    print("EDIT MIRROR ERROR:", repr(e))
+                    if other_channel.id in self.webhook_cache:
+                        del self.webhook_cache[other_channel.id]
+
 
     # ----------------------------------------------------
     # SLASH COMMAND GROUP
